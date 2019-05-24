@@ -125,14 +125,19 @@ class Spider:
         loop = asyncio.get_event_loop()
         crawl_queue = asyncio.Queue(loop=loop)
 
-        requests = self.first_request()
+        result = self.first_request()
 
-        assert isinstance(requests, Iterator)
+        assert isinstance(result, Iterator)
 
-        for request in requests:
-            if len(request.url) > 0:
-                crawl_queue.put_nowait(request)
+        for r in result:
+            # if len(request.url) > 0:
+            #     crawl_queue.put_nowait(request)
+            #     self.unfinished_request += 1
+            if isinstance(r, Request) and len(r.url) > 0:
+                crawl_queue.put_nowait(r)
                 self.unfinished_request += 1
+            elif isinstance(r, Item):
+                self.pipeline.process_item(r)
 
         assert crawl_queue.qsize() > 0
 
