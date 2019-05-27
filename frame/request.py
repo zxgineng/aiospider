@@ -34,4 +34,10 @@ class Request:
             return Response(url=self.url, status=200, content=content, exception=None, meta=self.meta)
 
         else:
-            return Response(url=self.url, status=res.status, content=None, exception=None, meta=self.meta)
+
+            try:
+                content = await res.read()
+            except Exception as e:
+                return Response(url=self.url, status=res.status, content=None, exception=e, meta=self.meta)
+
+            return Response(url=self.url, status=res.status, content=content, exception=None, meta=self.meta)
