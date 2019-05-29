@@ -74,7 +74,7 @@ class Spider:
                 if response.success or request.retry <= 0:
                     break
 
-            self.unfinished_request -= 1
+            # self.unfinished_request -= 1
             logger.debug(f"crawl:\t{n}号协程 {request.url} 完成爬取")
 
             for mw in self.all_mw:
@@ -100,7 +100,7 @@ class Spider:
                 # if self.force_sleep > 0:
                 #     time.sleep(self.force_sleep)
                 # continue
-
+            self.unfinished_request -= 1
             for mw in self.all_mw:
                 mw_result = mw.after_parse_response(response, result)
                 if mw_result is not None:
