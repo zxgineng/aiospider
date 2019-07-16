@@ -16,13 +16,13 @@ asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 class Spider:
-    coroutine_limit: int = 10
+    coroutine_limit: int = 30
     pipeline = DefaultPipeline
 
     reset_saved_data: bool = False
 
     force_sleep = 0
-    use_proxy = False
+    use_proxy = True
     debug = False
 
     def __init__(self):
@@ -65,7 +65,7 @@ class Spider:
                     mw_result = mw.before_send_request(request)
                     if mw_result is not None:
                         await mw_result
-                response = await request.get(session)
+                response = await request.work(session)
                 for mw in self.all_mw:
                     mw_result = mw.after_send_request(request, response)
                     if mw_result is not None:
