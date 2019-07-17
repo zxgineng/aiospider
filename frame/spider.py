@@ -117,6 +117,9 @@ class Spider:
         for mw in MIDDLEWARE.values():
             self.all_mw.append(mw(self))
 
+    def close_spider(self):
+        pass
+
     def _start(self):
         init_log(self)
 
@@ -149,6 +152,7 @@ class Spider:
             self.pipeline.close_pipeline()
             for mw in self.all_mw:
                 mw.close_middleware()
+            self.close_spider()
 
 
     def run(self):
